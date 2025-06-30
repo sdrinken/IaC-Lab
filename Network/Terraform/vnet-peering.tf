@@ -43,37 +43,30 @@ resource "azurerm_virtual_network_peering" "vm_to_aks" {
 }
 
 ###################################
-# NSG: Allow Only ICMP from AKS VNet
+# Reference existing NSG
 ###################################
 
-resource "azurerm_network_security_group" "dbserver_nsg" {
+data "azurerm_network_security_group" "dbserver_nsg" {
   name                = "nsg-dbserver"
-  location            = data.azurerm_virtual_network.vm_vnet.location
   resource_group_name = "rg-dbserver"
+}
 
-  security_rule {
-    name                       = "Allow-ICMP-From-AKS"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Icmp"
-    source_address_prefix      = "10.0.0.0/8"
-    destination_address_prefix = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-  }
+###################################
+# Add ICMP rule to existing NSG
+###################################
 
-  security_rule {
-    name                       = "Deny-All-Other-Inbound"
-    priority                   = 200
-    direction                  = "Inbound"
-    access                     = "Deny"
-    protocol                   = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-  }
+resource "azurerm_network_security_rule" "allow_icmp_from_aks" {
+  name                        = "Allow-ICMP-From-AKS"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Icmp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "10.0.0.0/8"
+  destination_address_prefix  = "*"
+  resource_group_name         = data.azurerm_network_security_group.dbserver_nsg.resource_group_name
+  network_security_group_name = data.azurerm_network_security_group.dbserver_nsg.name
 }
 
 resource "azurerm_subnet_network_security_group_association" "dbserver_nsg_assoc" {
