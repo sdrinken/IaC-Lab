@@ -24,5 +24,4 @@ resource "azurerm_kubernetes_cluster" "aks" {
   private_cluster_enabled = false
 
   role_based_access_control_enabled = true
-  kubernetes_version                = "1.29.0"
 }
