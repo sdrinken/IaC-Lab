@@ -1,4 +1,4 @@
-name: Terraform AKS Deployment
+name: Destroy Terraform AKS Deployment
 
 on:
   workflow_dispatch:  # manual trigger
