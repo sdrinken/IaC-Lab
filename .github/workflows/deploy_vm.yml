@@ -42,7 +42,7 @@ jobs:
         working-directory: AKS/Terraform
 
       - name: Upload SSH private key as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ssh-key
           path: AKS/Terraform/dbserver_key.pem
