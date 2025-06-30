@@ -68,8 +68,3 @@ resource "azurerm_network_security_rule" "allow_icmp_from_aks" {
   resource_group_name         = data.azurerm_network_security_group.dbserver_nsg.resource_group_name
   network_security_group_name = data.azurerm_network_security_group.dbserver_nsg.name
 }
-
-resource "azurerm_subnet_network_security_group_association" "dbserver_nsg_assoc" {
-  subnet_id                 = data.azurerm_subnet.vm_subnet.id
-  network_security_group_id = azurerm_network_security_group.dbserver_nsg.id
-}
