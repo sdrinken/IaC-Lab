@@ -33,15 +33,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan \
-                            -var client_id=$ARM_CLIENT_ID \
-                            -var client_secret=$ARM_CLIENT_SECRET \
-                            -var tenant_id=$ARM_TENANT_ID \
-                            -var subscription_id=$ARM_SUBSCRIPTION_ID
+        run: terraform plan -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve \
-                            -var client_id=$ARM_CLIENT_ID \
-                            -var client_secret=$ARM_CLIENT_SECRET \
-                            -var tenant_id=$ARM_TENANT_ID \
-                            -var subscription_id=$ARM_SUBSCRIPTION_ID
+        run: terraform apply -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID"
