@@ -34,6 +34,5 @@ variable "admin_username" {
 variable "mongodb_admin_password" {
   description = "MongoDB admin password"
   type        = string
-  default     = "StrongPassword123"  # change this default or override securely
   sensitive   = true
 }
