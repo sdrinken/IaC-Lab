@@ -2,20 +2,17 @@ name: Deploy VM from VM/Terraform
 
 on:
   workflow_dispatch:
-  # Optional: Trigger only when files in AKS/Terraform/ change
-  # push:
-  #   paths:
-  #     - 'VM/Terraform/**'
 
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  MONGODB_ADMIN_PASSWORD: ${{ secrets.MONGODB_ADMIN_PASSWORD }}
 
 jobs:
-  terraform:
-    name: Deploy VM Terraform
+  
+  deploy:
     runs-on: ubuntu-latest
 
     defaults:
@@ -33,10 +30,10 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID"
-
+        run: terraform plan -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID"  -var "mongodb_admin_password=$MONGODB_ADMIN_PASSWORD"
+  
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID"
+        run: terraform apply -auto-approve -var "client_id=$ARM_CLIENT_ID" -var "client_secret=$ARM_CLIENT_SECRET" -var "tenant_id=$ARM_TENANT_ID" -var "subscription_id=$ARM_SUBSCRIPTION_ID" -var "mongodb_admin_password=$MONGODB_ADMIN_PASSWORD"
 
       - name: Save private SSH key to file
         run: |
@@ -48,4 +45,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ssh-key
-          path: VM/Terraform/dbserver_key.pem  
+          path: VM/Terraform/dbserver_key.pem
