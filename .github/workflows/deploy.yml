@@ -1,7 +1,11 @@
-name: Terraform AKS Deployment
+name: Deploy AKS from AKS/Terraform
 
 on:
   workflow_dispatch:
+  # Optional: Trigger only when files in AKS/Terraform/ change
+  # push:
+  #   paths:
+  #     - 'AKS/Terraform/**'
 
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -11,11 +15,15 @@ env:
 
 jobs:
   terraform:
-    name: Deploy AKS
+    name: Deploy AKS Terraform
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: AKS/Terraform
+
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Terraform
