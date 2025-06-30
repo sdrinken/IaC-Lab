@@ -18,9 +18,9 @@ jobs:
     name: Deploy AKS Terraform
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: AKS/Terraform
+    #defaults:
+    #  run:
+    #    working-directory: AKS/Terraform
 
     steps:
       - name: Checkout repository
