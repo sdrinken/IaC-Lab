@@ -15,13 +15,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
-  network_profile {
-    network_plugin     = "azure"                    # Azure CNI
-    network_policy     = "azure"                    # Optional: "calico" for more controls
-    dns_service_ip     = "10.2.0.10"
-    docker_bridge_cidr = "172.17.0.1/16"
-    service_cidr       = "10.2.0.0/24"
-  }
+network_profile {
+  network_plugin     = "azure"
+  network_policy     = "azure"
+  service_cidr       = "172.16.0.0/16"
+  dns_service_ip     = "172.16.0.10"
+  docker_bridge_cidr = "172.17.0.1/16"
+}
 
   private_cluster_enabled = false
 
