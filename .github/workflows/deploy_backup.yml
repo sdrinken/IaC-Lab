@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "$VM_SSH_PRIVATE_KEY" > private_key.pem
           export MONGO_URI="${{ secrets.MONGO_URI }}"
-          export STORAGE_ACCOUNT="mongodbbackupstestje"
+          export STORAGE_ACCOUNT="mongodbbackupstest"
           export CONTAINER_NAME="backups"
           export TARGET_DIR="/tmp/mongodump"
           chmod 600 private_key.pem
