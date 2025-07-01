@@ -1,3 +1,3 @@
-acr_name         = "mycompanyacr"
+acr_name         = "webmongodb"
 resource_group   = "aks-private-rg"
-aks_cluster_name = "my-aks-cluster"
+aks_cluster_name = "private-aks"
