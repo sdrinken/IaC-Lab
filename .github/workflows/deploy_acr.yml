@@ -1,4 +1,4 @@
-name: Deploy AKS from Deploy ACR Terraform
+name: Deploy ACR Terraform
 
 on:
   workflow_dispatch:
