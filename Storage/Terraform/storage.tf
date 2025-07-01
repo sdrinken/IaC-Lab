@@ -14,6 +14,8 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
+  depends_on = [azurerm_resource_group.rg] 
+
   blob_properties {
     delete_retention_policy {
       days = 7
