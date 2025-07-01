@@ -1,0 +1,58 @@
+name: Deploy Storage & MongoDB Backup Cron From Storage/Terraform
+
+on:
+  workflow_dispatch:
+  # Optional: Trigger only when files in AKS/Terraform/ change
+  # push:
+  #   paths:
+  #     - 'Storage/Terraform/**'
+
+jobs:
+  terraform:
+    name: Deploy AKS Terraform
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Storage/Terraform
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      VM_SSH_USER: ${{ secrets.VM_SSH_USER }}
+      VM_SSH_HOST: ${{ secrets.VM_SSH_HOST }}
+      VM_SSH_PRIVATE_KEY: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
+      STORAGE_KEY: ${{ secrets.STORAGE_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+      - name: Copy backup script to VM
+        run: |
+          echo "$VM_SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          scp -o StrictHostKeyChecking=no -i private_key.pem backup-mongo.sh $VM_SSH_USER@$VM_SSH_HOST:/home/$VM_SSH_USER/backup-mongo.sh
+
+      - name: Setup cronjob on VM
+        run: |
+          echo "$VM_SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $VM_SSH_USER@$VM_SSH_HOST << EOF
+            sudo apt-get update && sudo apt-get install -y azure-cli mongodb-clients
+            chmod +x /home/$VM_SSH_USER/backup-mongo.sh
+
+            # Setup cronjob with environment variables
+            (crontab -l 2>/dev/null; echo "0 * * * * MONGO_URI='$MONGO_URI' STORAGE_ACCOUNT='$STORAGE_ACCOUNT' STORAGE_KEY='$STORAGE_KEY' /home/$VM_SSH_USER/backup-mongo.sh >> /home/$VM_SSH_USER/backup-mongo.log 2>&1") | crontab -
+          EOF
