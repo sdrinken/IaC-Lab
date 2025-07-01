@@ -6,14 +6,11 @@ CONTAINER_NAME="backups"
 TARGET_DIR="/tmp/mongodump"
 MONGO_URI=$MONGO_URI
 
-# Sleep 5
-sleep 5
-
 # Create DIR
 sudo mkdir $TARGET_DIR
 
 # Create backup
-mongodump --uri="$MONGO_URI" --archive="$TARGET_DIR/dump_$(date +%Y%m%d%h).txt" --db=employees --collection=employees
+mongodump --uri=$MONGO_URI --archive="$TARGET_DIR/dump_$(date +%Y%m%d%h).txt" --db=employees --collection=employees
 
 # Authenticate via Managed Identity
 az login --identity
