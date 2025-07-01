@@ -15,7 +15,7 @@ variable "storage_account_name" {
   type = string
 }
 
-resource "azurerm_storage_account" "backup_sa" {
+resource "azurerm_storage_account" "mongodbbackup_demo" {
   name                     = var.storage_account_name
   resource_group_name      = var.resource_group_name
   location                 = var.location
