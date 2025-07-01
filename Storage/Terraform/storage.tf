@@ -24,9 +24,9 @@ resource "azurerm_storage_container" "container" {
 }
 
 output "storage_account_name" {
-  value = azurerm_storage_account.backup_sa.name
+  value = azurerm_storage_account.storage.name
 }
 
 output "storage_container_name" {
-  value = azurerm_storage_container.backup_container.name
+  value = azurerm_storage_container.container.name
 }
