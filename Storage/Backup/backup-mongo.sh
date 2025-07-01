@@ -7,7 +7,7 @@ TARGET_DIR="/tmp/mongodump"
 URI='$MONGO_URI'
 
 # Create DIR
-mkdir $TARGET_DIR
+sudo mkdir $TARGET_DIR
 
 # Create backup
 mongodump --uri="$URI" --archive="$TARGET_DIR/dump_$(date +%Y%m%d%h).txt" --db=employees --collection=employees
@@ -23,4 +23,4 @@ az storage blob upload-batch \
   --overwrite
 
 # Clean up folder
-rm -rf $TARGET_DIR
+sudo rm -rf $TARGET_DIR
