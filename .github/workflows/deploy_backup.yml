@@ -28,6 +28,9 @@ jobs:
         run: |
           echo "$VM_SSH_PRIVATE_KEY" > private_key.pem
           export MONGO_URI="${{ secrets.MONGO_URI }}"
+          export STORAGE_ACCOUNT="mongodbbackupstestje"
+          export CONTAINER_NAME="backups"
+          export TARGET_DIR="/tmp/mongodump"
           chmod 600 private_key.pem
           envsubst < backup-mongo.template > backup-mongo.sh
           scp -o StrictHostKeyChecking=no -i private_key.pem backup-mongo.sh $VM_SSH_USER@$VM_SSH_HOST:/home/$VM_SSH_USER/backup-mongo.sh
