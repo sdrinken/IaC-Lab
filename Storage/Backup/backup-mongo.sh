@@ -4,7 +4,7 @@
 STORAGE_ACCOUNT="mongodbbackupstestje"
 CONTAINER_NAME="backups"
 TARGET_DIR="/tmp/mongodump"
-URI='$MONGO_URI'
+URI=${{ secrets.MONGO_URI }}
 
 # Create DIR
 sudo mkdir $TARGET_DIR
