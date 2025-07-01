@@ -22,6 +22,12 @@ network_profile {
   dns_service_ip     = "172.16.0.10"
 }
 
+resource "kubernetes_namespace" "frontend" {
+  metadata {
+    name = "frontend"
+  }
+}
+
   private_cluster_enabled = false
 
   role_based_access_control_enabled = true
