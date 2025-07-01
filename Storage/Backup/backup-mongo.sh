@@ -1,38 +1,32 @@
 #!/bin/bash
-set -e
 
-if [ -z "$MONGO_URI" ]; then
-  echo "Error: MONGO_URI environment variable not set"
-  exit 1
-fi
+# Variables
+STORAGE_ACCOUNT="mongodbbackupstestje"
+CONTAINER_NAME="backups"
+SOURCE_DIR="/tmp/archive"
+TARGET_DIR="/tmp/mongodump"
+URI='$MONGO_URI'
 
-if [ -z "$STORAGE_ACCOUNT" ] || [ -z "$STORAGE_KEY" ]; then
-  echo "Error: Azure storage credentials not set"
-  exit 1
-fi
+# Create DIR
+mkdir $TARGET_DIR
+mkdir $SOURCE_DIR
 
-# Backup path and timestamp
-BACKUP_DIR="/tmp/mongodump"
-TIMESTAMP=$(date +%Y%m%d%H%M%S)
-ARCHIVE_FILE="employees_backup_$TIMESTAMP.tar.gz"
+# Create backup
+mongodump --uri="$URI" --archive="$TARGET_DIR/dump_$(date +%Y%m%d%h).txt" --db=employees --collection=employees
 
-mkdir -p "$BACKUP_DIR/archive"
+# Copy files
+mv $TARGET_DIR/* $SOURCE_DIR
 
-# Create dump of employees collection
-mongodump --uri="$MONGO_URI" --archive="$BACKUP_DIR/dump.archive" --gzip --collection=employees
+# Authenticate via Managed Identity
+az login --identity
 
-mv "$BACKUP_DIR/dump.archive" "$BACKUP_DIR/archive/employees.archive.gz"
-
-tar -czf "$BACKUP_DIR/$ARCHIVE_FILE" -C "$BACKUP_DIR/archive" .
-
-# Upload to Azure Storage
-az storage blob upload \
-  --account-name "$STORAGE_ACCOUNT" \
-  --account-key "$STORAGE_KEY" \
-  --container-name "backups" \
-  --file "$BACKUP_DIR/$ARCHIVE_FILE" \
-  --name "$ARCHIVE_FILE" \
+# Upload all files in SOURCE_DIR
+az storage blob upload-batch \
+  --account-name $STORAGE_ACCOUNT \
+  --destination $CONTAINER_NAME \
+  --source $SOURCE_DIR \
   --overwrite
 
-# Cleanup
-rm -rf "$BACKUP_DIR"
+# Clean up folder
+rm -rf $SOURCE_DIR
+rm -rf $TARGET_DIR
