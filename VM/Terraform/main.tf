@@ -117,44 +117,4 @@ resource "azurerm_linux_virtual_machine" "dbserver" {
     sku       = "22_04-lts-gen2"
     version   = "latest"
   }
-
-  custom_data = base64encode(<<-EOF
-    #cloud-config
-    package_update: false
-    package_upgrade: false
-    package_reboot_if_required: false
-    runcmd:
-      # Disable automatic Ubuntu updates
-      - systemctl disable --now apt-daily.timer apt-daily-upgrade.timer
-
-      # Import MongoDB public GPG key to /usr/share/keyrings
-      - wget -qO /usr/share/keyrings/mongodb-server-6.0.gpg https://www.mongodb.org/static/pgp/server-6.0.asc
-
-      # Add MongoDB repo for Ubuntu 22.04 (jammy) with signed-by option
-      - echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-      - wget -qO /usr/share/keyrings/mongodb-server-6.0.gpg https://www.mongodb.org/static/pgp/server-6.0.asc
-
-      # Update package lists
-      - apt-get update
-
-      # Install MongoDB
-      - apt-get install -y mongodb-org
-      # Enable MongoDB authorization (authentication) using yq for robust YAML editing
-      - apt-get install -y jq
-      - wget -O /usr/bin/yq https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64
-      - chmod +x /usr/bin/yq
-      - yq -i '.security.authorization = "enabled"' /etc/mongod.conf
-      - sed -i '/#security:/a\  authorization: "enabled"' /etc/mongod.conf
-
-      # Start and enable MongoDB service
-      - systemctl enable mongod
-      - systemctl start mongod
-
-      # Wait to ensure mongod is running
-      - sleep 5
-
-      # Create admin MongoDB user (change password via variable if needed)
-      - mongo admin --eval 'db.createUser({user: "admin", pwd: "StrongPassword123", roles: [{role: "root", db: "admin"}]})'
-  EOF
-  )
 }
