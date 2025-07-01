@@ -35,7 +35,5 @@ jobs:
           echo "$VM_SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -o StrictHostKeyChecking=no -i private_key.pem $VM_SSH_USER@$VM_SSH_HOST << EOF
-            chmod +x /home/$VM_SSH_USER/backup-mongo.sh
-
-            (crontab -l 2>/dev/null; echo "0 * * * * MONGO_URI='$MONGO_URI' /home/$VM_SSH_USER/backup-mongo.sh >> /home/$VM_SSH_USER/backup-mongo.log 2>&1") | crontab -
-          EOF
+            sudo chmod +x /home/$VM_SSH_USER/backup-mongo.sh
+            sudo mv /home/$VM_SSH_USER/backup-mongo.sh /etc/cron.hourly/
