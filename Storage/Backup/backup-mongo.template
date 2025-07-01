@@ -4,7 +4,7 @@
 STORAGE_ACCOUNT="mongodbbackupstestje"
 CONTAINER_NAME="backups"
 TARGET_DIR="/tmp/mongodump"
-URI=$MONGO_URI
+MONGO_URI=$MONGO_URI
 
 # Sleep 5
 sleep 5
@@ -13,7 +13,7 @@ sleep 5
 sudo mkdir $TARGET_DIR
 
 # Create backup
-mongodump --uri="$URI" --archive="$TARGET_DIR/dump_$(date +%Y%m%d%h).txt" --db=employees --collection=employees
+mongodump --uri="MONGO_URI" --archive="$TARGET_DIR/dump_$(date +%Y%m%d%h).txt" --db=employees --collection=employees
 
 # Authenticate via Managed Identity
 az login --identity
