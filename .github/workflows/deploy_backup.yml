@@ -32,13 +32,13 @@ jobs:
           export CONTAINER_NAME="backups"
           export TARGET_DIR="/tmp/mongodump"
           chmod 600 private_key.pem
-          envsubst < backup-mongo.template > backup-mongo.sh
-          scp -o StrictHostKeyChecking=no -i private_key.pem backup-mongo.sh $VM_SSH_USER@$VM_SSH_HOST:/home/$VM_SSH_USER/backup-mongo.sh
+          envsubst < backup-mongo.template > backup-mongo
+          scp -o StrictHostKeyChecking=no -i private_key.pem backup-mongo $VM_SSH_USER@$VM_SSH_HOST:/home/$VM_SSH_USER/backup-mongo
 
       - name: Setup cronjob on VM
         run: |
           echo "$VM_SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -o StrictHostKeyChecking=no -i private_key.pem $VM_SSH_USER@$VM_SSH_HOST << EOF
-            sudo chmod +x /home/$VM_SSH_USER/backup-mongo.sh
-            sudo mv /home/$VM_SSH_USER/backup-mongo.sh /etc/cron.hourly/
+            sudo chmod +x /home/$VM_SSH_USER/backup-mongo
+            sudo mv /home/$VM_SSH_USER/backup-mongo /etc/cron.hourly/
