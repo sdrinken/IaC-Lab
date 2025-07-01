@@ -8,7 +8,7 @@ variable "tenant_id" {}
 variable "subscription_id" {}
 variable "storage_account_name" {
   type    = string
-  default = "mongodbbackupsdemo"
+  default = "mongodbbackupstestje"
 }
 variable "storage_container_name" {
   type = string
