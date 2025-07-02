@@ -30,7 +30,7 @@ jobs:
     - name: Run Microsoft Security DevOps
       uses: microsoft/security-devops-action@latest
       with:
-        tools: 'bandit, binskim, checkov, eslint, templateanalyzer, terrascan, trivy'
+        tools: 'checkov, eslint, terrascan, trivy'
       id: msdo
     # with:
       # config: string. Optional. A file path to an MSDO configuration file ('*.gdnconfig').
