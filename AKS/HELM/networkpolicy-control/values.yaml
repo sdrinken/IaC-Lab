@@ -1,0 +1,6 @@
+namespace: frontend
+allowedPodLabel:
+   key: "app"
+    value: "mongo-webform"
+targetIp: "192.168.100.4"
+targetSubnet: "192.168.100.0/24"
