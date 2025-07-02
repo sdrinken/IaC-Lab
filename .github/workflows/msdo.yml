@@ -29,8 +29,9 @@ jobs:
       # Run analyzers
     - name: Run Microsoft Security DevOps
       uses: microsoft/security-devops-action@latest
+      with:
+        tools: 'bandit, binskim, checkov, eslint, templateanalyzer, terrascan, trivy'
       id: msdo
-      tools: 'bandit, binskim, checkov, eslint, templateanalyzer, terrascan, trivy'
     # with:
       # config: string. Optional. A file path to an MSDO configuration file ('*.gdnconfig').
       # policy: 'GitHub' | 'microsoft' | 'none'. Optional. The name of a well-known Microsoft policy. If no configuration file or list of tools is provided, the policy may instruct MSDO which tools to run. Default: GitHub.
