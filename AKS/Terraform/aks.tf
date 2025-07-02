@@ -22,7 +22,7 @@ network_profile {
   dns_service_ip     = "172.16.0.10"
 }
 
-  private_cluster_enabled = false
+  private_cluster_enabled = true
 
   role_based_access_control_enabled = true
 }
