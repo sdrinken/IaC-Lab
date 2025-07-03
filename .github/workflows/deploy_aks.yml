@@ -2,11 +2,6 @@ name: Deploy AKS from AKS/Terraform
 
 on:
   workflow_dispatch:
-  # Optional: Trigger only when files in AKS/Terraform/ change
-  # push:
-  #   paths:
-  #     - 'AKS/Terraform/**'
-
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
